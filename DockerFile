@@ -1,0 +1,10 @@
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
+
+COPY target/bitcoin-historic-price.jar app.jar
+
+# Expose the port that the Spring Boot application listens on
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
