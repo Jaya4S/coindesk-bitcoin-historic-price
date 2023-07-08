@@ -15,25 +15,24 @@ import java.util.List;
 @Component
 public class CoindeskRestClient {
 
-    @Value("${coindesk-api:https://api.coindesk.com/v1/bpi}")
+    @Value("${coindesk.api.base.url}")
     private String coindeskBitcoinUrl;
 
-    @Value("${historic-bitcoin-prices-path:/historical/close.json}")
+    @Value("${historic.bitcoin.prices.path}")
     private String historicPriceIndexPath;
 
-    @Value("${supported-currencies-path:/supported-currencies.json}")
+    @Value("${supported.currencies.path}")
     private String supportedCurrenciesPath;
 
-    private static RestTemplate restTemplate = new RestTemplate();
+    private static final RestTemplate restTemplate = new RestTemplate();
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public CoindeskBPIResponse getHistoricBitcoinPrices(String startDate, String endDate, String currency) throws IOException {
         String API_URL = this.coindeskBitcoinUrl.concat(this.historicPriceIndexPath);
         String historicBPIUrl = String.format("%s?start=%s&end=%s&currency=%s", API_URL, startDate, endDate, currency);
-        ResponseEntity<String> response =  restTemplate.getForEntity(historicBPIUrl, String.class);;
-        CoindeskBPIResponse bpiResponse = objectMapper.readValue(response.getBody().getBytes(), CoindeskBPIResponse.class);
-        return bpiResponse;
+        ResponseEntity<String> response =  restTemplate.getForEntity(historicBPIUrl, String.class);
+        return objectMapper.readValue(response.getBody().getBytes(), CoindeskBPIResponse.class);
     }
 
     public List<CoindeskSupportedCurrenciesResponse> getSupportedCurrencies() throws IOException {
